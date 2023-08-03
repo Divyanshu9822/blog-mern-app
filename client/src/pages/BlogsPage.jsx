@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-import { Link } from 'react-router-dom';
 import { BlogContext } from '../context/BlogContext';
 import Blog from '../components/Blog';
 import SearchBox from '../components/SearchBox';

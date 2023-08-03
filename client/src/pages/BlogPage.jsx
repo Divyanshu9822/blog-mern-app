@@ -40,15 +40,14 @@ const BlogPage = () => {
               <h2 className="text-4xl font-semibold text-gray-800 leading-tight">
                 {blog.title}
               </h2>
-              <a
-                href="#"
+              <p
                 className="py-2 text-green-700 inline-flex items-center justify-center mb-2"
               >
                 Cryptocurrency
-              </a>
+              </p>
             </div>
 
-            <img src={blog.imageUrl} className="w-full object-cover rounded-md" style={{ height: '28em' }} />
+            <img src={blog.imageUrl} className="w-full object-cover rounded-md" alt='blog cover' style={{ height: '28em' }} />
           </div>
 
           <div className="flex flex-col lg:flex-row lg:space-x-12">

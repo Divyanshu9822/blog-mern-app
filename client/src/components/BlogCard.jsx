@@ -22,9 +22,9 @@ const BlogCard = (props) => {
   return (
     <Link key={props.blog._id} to={`/blogs/${props.blog._id}`}>
       <article className="flex flex-col">
-        <a rel="noopener noreferrer" href="#" aria-label="Te nulla oportere reprimique his dolorum">
+        <div>
           <img alt="" className="object-cover rounded-md w-full h-52 " src={props.blog.imageUrl} />
-        </a>
+        </div>
         <div className="flex flex-col flex-1 py-6">
           <div className="flex justify-between items-center">
             <span className="text-xs">{formattedDate}</span>
