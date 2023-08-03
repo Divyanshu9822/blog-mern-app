@@ -9,7 +9,7 @@ const BlogProvider = ({ children }) => {
 
   const fetchData = async () => {
     try {
-      const response = await axios.get('http://localhost:8000/api/blogs');
+      const response = await axios.get('https://blog-mern-app-c78l.onrender.com/api/blogs');
       const fetchedBlogs = response.data;
       setBlogs(fetchedBlogs);
     } catch (error) {
@@ -23,7 +23,7 @@ const BlogProvider = ({ children }) => {
 
   const fetchUserDetails = async (userId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/users/${userId}`);
+      const response = await axios.get(`https://blog-mern-app-c78l.onrender.com/api/users/${userId}`);
       return response.data;
     } catch (error) {
       console.error(`Error fetching user details for user ID ${userId}:`, error);
@@ -32,7 +32,7 @@ const BlogProvider = ({ children }) => {
 
   const getSingleBlog = async (blogId) => {
     try {
-      const response = await axios.get(`http://localhost:8000/api/blogs/${blogId}`);
+      const response = await axios.get(`https://blog-mern-app-c78l.onrender.com/api/blogs/${blogId}`);
       return response.data;
     } catch (error) {
       console.error('Error fetching single blog:', error);
@@ -52,7 +52,7 @@ const BlogProvider = ({ children }) => {
       formData.append('image', coverImage);
 
       // Use the `accessToken` in the request headers
-      const response = await axios.post('http://localhost:8000/api/upload', formData);
+      const response = await axios.post('https://blog-mern-app-c78l.onrender.com/api/upload', formData);
       imageUrl = response.data.imageUrl;
 
       const wordsPerMinute = 200;
@@ -75,7 +75,7 @@ const BlogProvider = ({ children }) => {
       }
 
       // Use the `accessToken` in the request headers
-      await axios.post('http://localhost:8000/api/blogs', blogData, {
+      await axios.post('https://blog-mern-app-c78l.onrender.com/api/blogs', blogData, {
         headers: {
           Authorization: `${accessToken}`,
         },
@@ -98,7 +98,7 @@ const BlogProvider = ({ children }) => {
         return [];
       }
 
-      const response = await axios.get('http://localhost:8000/api/blogs/my-blogs', {
+      const response = await axios.get('https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs', {
         headers: {
           Authorization: `${accessToken}`,
         },
@@ -120,7 +120,7 @@ const BlogProvider = ({ children }) => {
         return;
       }
 
-      const response = await axios.post(`http://localhost:8000/api/comments/${blogId}/`, {
+      const response = await axios.post(`https://blog-mern-app-c78l.onrender.com/api/comments/${blogId}/`, {
         commentText,
       }, {
         headers: {
@@ -143,7 +143,7 @@ const BlogProvider = ({ children }) => {
 
   const deleteComment = async (blogId, commentId) => {
     try {
-      await axios.delete(`http://localhost:8000/api/comments/${commentId}`);
+      await axios.delete(`https://blog-mern-app-c78l.onrender.com/api/comments/${commentId}`);
       const updatedBlogs = blogs.map((blog) => {
         if (blog._id === blogId) {
           const updatedComments = blog.comments.filter((comment) => comment._id !== commentId);

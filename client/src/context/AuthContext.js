@@ -21,7 +21,7 @@ const AuthProvider = ({ children }) => {
         email,
         password,
       };
-      const response = await axios.post('http://localhost:8000/api/users/login', userData);
+      const response = await axios.post('https://blog-mern-app-c78l.onrender.com/api/users/login', userData);
       const { accessToken } = response.data;
       console.log(accessToken);
 
@@ -39,7 +39,7 @@ const AuthProvider = ({ children }) => {
 
   const fetchUserDetails = async (accessToken) => {
     try {
-      const response = await fetch('http://localhost:8000/api/users/current', {
+      const response = await fetch('https://blog-mern-app-c78l.onrender.com/api/users/current', {
         headers: {
           Authorization: `${accessToken}`,
         },
@@ -76,7 +76,7 @@ const AuthProvider = ({ children }) => {
         email,
         password,
       };
-      await axios.post('http://localhost:8000/api/users/register', userData);
+      await axios.post('https://blog-mern-app-c78l.onrender.com/api/users/register', userData);
 
       console.log('User registered successfully!');
     } catch (error) {
