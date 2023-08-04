@@ -22,7 +22,7 @@ exports.createComment = asyncHandler(async (req, res) => {
     });
 
     // Save the comment to the blog's comments array
-    blog.comments.push(newComment);
+    blog.comments.unshift(newComment); // Add the new comment at the 0th index
     await blog.save();
 
     res.status(201).json(blog);
