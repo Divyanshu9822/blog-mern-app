@@ -42,7 +42,7 @@ const CreateBlogPage = () => {
     setSummary('')
     setCoverImage(null)
     setCoverImageUrl(null)
-    navigate('/')
+    navigate('/blogs')
   };
 
   return (
