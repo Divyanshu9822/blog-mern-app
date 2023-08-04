@@ -8,9 +8,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleLogin(email, password);
+    await handleLogin(email, password);
     navigate('/'); 
   };
 
