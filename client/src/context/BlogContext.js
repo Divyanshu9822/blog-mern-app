@@ -11,7 +11,11 @@ const BlogProvider = ({ children }) => {
     try {
       const response = await axios.get('https://blog-mern-app-c78l.onrender.com/api/blogs');
       const fetchedBlogs = response.data;
-      setBlogs(fetchedBlogs);
+
+      // Sort blogs in descending order based on the "impressions" field
+      const sortedBlogs = fetchedBlogs.sort((a, b) => b.impressions - a.impressions);
+
+      setBlogs(sortedBlogs);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
