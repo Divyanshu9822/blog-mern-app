@@ -28,7 +28,7 @@ const AuthProvider = ({ children }) => {
       localStorage.setItem('accessToken', accessToken);
       setIsLoggedIn(true);
 
-      fetchUserDetails(accessToken);
+      await fetchUserDetails(accessToken);
 
       console.log('User logged in successfully!');
     } catch (error) {
