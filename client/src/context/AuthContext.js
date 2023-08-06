@@ -41,7 +41,7 @@ const AuthProvider = ({ children }) => {
     try {
       const response = await fetch('https://blog-mern-app-c78l.onrender.com/api/users/current', {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
 

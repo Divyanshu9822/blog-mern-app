@@ -36,7 +36,7 @@ const EditBlog = () => {
         };
 
         fetchSingleBlog();
-    });
+    },[id, getSingleBlog]);
     // console.log(blog)
 
     const handleCoverImageChange = (event) => {

@@ -81,7 +81,7 @@ const BlogProvider = ({ children }) => {
       // Use the `accessToken` in the request headers
       await axios.post('https://blog-mern-app-c78l.onrender.com/api/blogs', blogData, {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
 
@@ -132,7 +132,7 @@ const BlogProvider = ({ children }) => {
       // Use the `accessToken` in the request headers
       await axios.put(`https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs/${id}`, blogData, {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
 
@@ -156,7 +156,7 @@ const BlogProvider = ({ children }) => {
 
       const response = await axios.get('https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs', {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
 
@@ -179,7 +179,7 @@ const BlogProvider = ({ children }) => {
 
       await axios.delete(`https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs/${blogId}`, {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
 
@@ -204,7 +204,7 @@ const BlogProvider = ({ children }) => {
         commentText,
       }, {
         headers: {
-          Authorization: `${accessToken}`,
+          Authorization: accessToken,
         },
       });
       // console.log(response.data)
