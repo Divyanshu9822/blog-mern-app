@@ -4,6 +4,7 @@ import { BlogContext } from '../context/BlogContext';
 import DOMPurify from 'dompurify';
 import CommentSection from '../components/CommentSection';
 import Comment from '../components/Comment';
+import Loader from '../components/Loader';
 
 const BlogPage = () => {
   const { id } = useParams();
@@ -26,10 +27,11 @@ const BlogPage = () => {
   }, [id, getSingleBlog]);
 
   if (!blog) {
-    return <div>Loading...</div>;
+    return <Loader/>;
   }
-  const sanitizedContent = DOMPurify.sanitize(blog.content, { USE_PROFILES: { html: true } });
 
+  const { title, content, imageUrl, comments } = blog;
+  const sanitizedContent = DOMPurify.sanitize(content, { USE_PROFILES: { html: true } });
 
   return (
     <div className='min-h-screen'>
@@ -38,16 +40,14 @@ const BlogPage = () => {
           <div className="mb-4 md:mb-0 w-full mx-auto relative">
             <div className="px-4 lg:px-0">
               <h2 className="text-4xl font-semibold text-gray-800 leading-tight">
-                {blog.title}
+                {title}
               </h2>
-              <p
-                className="py-2 text-green-700 inline-flex items-center justify-center mb-2"
-              >
+              <p className="py-2 text-green-700 inline-flex items-center justify-center mb-2">
                 Cryptocurrency
               </p>
             </div>
 
-            <img src={blog.imageUrl} className="w-full object-cover rounded-md" alt='blog cover' style={{ height: '28em' }} />
+            <img src={imageUrl} className="w-full object-cover rounded-md" alt='blog cover' style={{ height: '28em' }} />
           </div>
 
           <div className="flex flex-col lg:flex-row lg:space-x-12">
@@ -57,14 +57,10 @@ const BlogPage = () => {
           </div>
         </main>
         <div className="mt-10">
-
-        <CommentSection blogId={id} count={blog.comments.length}/>
-        {
-          blog.comments.map((comment) => {
-            return  <Comment key={comment._id} user_id={comment.user_id} date={comment.date} commentText={comment.commentText}/>
-          })
-        }
-       
+          <CommentSection blogId={id} count={comments.length} />
+          {comments?.map((comment) => (
+            <Comment key={comment._id} user_id={comment.user_id} date={comment.date} commentText={comment.commentText} />
+          ))}
         </div>
       </div>
     </div>

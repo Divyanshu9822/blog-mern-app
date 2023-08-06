@@ -15,16 +15,13 @@ const EditBlog = () => {
     const { handleBlogUpdate } = useContext(BlogContext)
     const navigate = useNavigate()
     const { getSingleBlog } = useContext(BlogContext);
-    // const [blog, setBlog] = useState(null);
+    const [isSubmitting, setIsSubmitting] = useState(false)
 
     useEffect(() => {
         const fetchSingleBlog = async () => {
             try {
                 const singleBlog = await getSingleBlog(id);
                 if (singleBlog) {
-                    // Set the state variables after the blog data is fetched
-                    // setBlog(singleBlog);
-                    // console.log(blog)
                     setContent(singleBlog.content);
                     setTitle(singleBlog.title);
                     setCoverImageUrl(singleBlog.imageUrl);
@@ -36,8 +33,7 @@ const EditBlog = () => {
         };
 
         fetchSingleBlog();
-    },[id, getSingleBlog]);
-    // console.log(blog)
+    }, [id, getSingleBlog]);
 
     const handleCoverImageChange = (event) => {
         const file = event.target.files[0];
@@ -49,7 +45,6 @@ const EditBlog = () => {
 
     const handleSummaryChange = (e) => {
         setSummary(e.target.value);
-        // console.log(summary)
     };
 
 
@@ -60,7 +55,9 @@ const EditBlog = () => {
     };
 
     const handleSubmit = async () => {
+        setIsSubmitting(true)
         await handleBlogUpdate(id, title, content, summary, coverImage, coverImageUrl);
+        setIsSubmitting(false)
         setContent('')
         setTitle('')
         setSummary('')
@@ -154,7 +151,13 @@ const EditBlog = () => {
                     }} />
             </div>
             <div className="text-center my-10">
-                <button className='text-xl px-5 py-3 rounded-md bg-blue-500 text-white' onClick={handleSubmit}>Post blog</button>
+                <button type="button" onClick={handleSubmit} class={`inline-flex items-center px-5 py-3 font-semibold leading-6 text-md shadow rounded-md text-white bg-blue-500 transition ease-in-out duration-150 ${isSubmitting ? 'cursor-not-allowed hover:bg-blue-400' : 'hover:bg-blue-600'}`} >
+                    {isSubmitting && <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>}
+                    {isSubmitting ? 'Making Changes...' : 'Update'}
+                </button>
             </div>
         </>
     );
