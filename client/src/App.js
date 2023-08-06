@@ -7,6 +7,7 @@ import RegisterPage from './pages/RegisterPage';
 import CreateBlogPage from './pages/CreateBlogPage';
 import BlogPage from "./pages/BlogPage";
 import MyBlogsPage from "./pages/MyBlogsPage";
+import EditBlog from "./pages/EditBlog";
 
 function App() {
   return (
@@ -58,6 +59,14 @@ function App() {
             element={
               <Layout>
                 <MyBlogsPage />
+              </Layout>
+            }
+          />
+          <Route
+            path="/edit-blog/:id"
+            element={
+              <Layout>
+                <EditBlog />
               </Layout>
             }
           />
