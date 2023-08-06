@@ -23,7 +23,7 @@ const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
 
     const handleCopyLink = () => {
         // Copy the blog link to the clipboard
-        const blogLink = `${window.location.origin}/blog/${blog_id}`;
+        const blogLink = `${window.location.origin}/blogs/${blog_id}`;
         navigator.clipboard.writeText(blogLink)
           .then(() => console.log('Blog link copied to clipboard!'))
           .catch((error) => console.error('Failed to copy blog link:', error));
@@ -43,15 +43,15 @@ const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
             {isDropdownVisible && (
                 <div id="userDropdown" className="z-10 absolute right-0 top-11 bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-44">
                     <ul className="py-2 text-sm text-gray-700" aria-labelledby="avatarButton">
-                        <li className="block px-4 py-2 hover:bg-gray-100" onClick={handleCopyLink}>
+                        <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleCopyLink}>
                             Copy Blog Link
                         </li>
                         {user?.id === creator_id && (
                             <>
-                                <li className="block px-4 py-2 hover:bg-gray-100">
+                                <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
                                     Edit
                                 </li>
-                                <li className="block px-4 py-2 hover:bg-gray-100" onClick={() => handleDelete(blog_id)}>
+                                <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleDelete(blog_id)}>
                                     Delete
                                 </li>
                             </>
