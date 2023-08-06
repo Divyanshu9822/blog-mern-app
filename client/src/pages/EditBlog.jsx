@@ -15,7 +15,7 @@ const EditBlog = () => {
     const { handleBlogUpdate } = useContext(BlogContext)
     const navigate = useNavigate()
     const { getSingleBlog } = useContext(BlogContext);
-    const [blog, setBlog] = useState(null);
+    // const [blog, setBlog] = useState(null);
 
     useEffect(() => {
         const fetchSingleBlog = async () => {
@@ -23,7 +23,7 @@ const EditBlog = () => {
                 const singleBlog = await getSingleBlog(id);
                 if (singleBlog) {
                     // Set the state variables after the blog data is fetched
-                    setBlog(singleBlog);
+                    // setBlog(singleBlog);
                     // console.log(blog)
                     setContent(singleBlog.content);
                     setTitle(singleBlog.title);
@@ -36,7 +36,7 @@ const EditBlog = () => {
         };
 
         fetchSingleBlog();
-    }, [id]);
+    });
     // console.log(blog)
 
     const handleCoverImageChange = (event) => {
