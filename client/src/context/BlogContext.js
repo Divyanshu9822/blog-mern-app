@@ -92,6 +92,58 @@ const BlogProvider = ({ children }) => {
       console.log('Failed to create blog. Please try again.');
     }
   };
+  const handleBlogUpdate = async (id, title, content, summary, coverImage, coverImageUrl) => {
+    if (!title || !content) {
+      alert('Please fill in the title and content.');
+      return;
+    }
+
+    try {
+      let imageUrl = coverImageUrl; // Use the existing coverImageUrl if provided
+
+      if (coverImage) {
+        const formData = new FormData();
+        formData.append('image', coverImage);
+
+        // Use the `accessToken` in the request headers
+        const response = await axios.post('https://blog-mern-app-c78l.onrender.com/api/upload', formData);
+        imageUrl = response.data.imageUrl;
+      }
+
+      const wordsPerMinute = 200;
+      const wordCount = content.split(/\s+/).length;
+      const minsRead = Math.ceil(wordCount / wordsPerMinute);
+
+      const blogData = {
+        title: title,
+        content: content,
+        summary: summary,
+        imageUrl: imageUrl,
+        minsRead: minsRead
+      };
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        console.error('Access token not found. User may not be logged in.');
+        return;
+      }
+
+      // Use the `accessToken` in the request headers
+      await axios.put(`https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs/${id}`, blogData, {
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+      });
+
+      console.log('Blog edited successfully!');
+      await fetchData();
+    } catch (error) {
+      console.error('Error making changes to blog:', error);
+      console.log('Failed to edit blog. Please try again.');
+    }
+  };
+
 
   const getMyBlogs = async () => {
     try {
@@ -189,6 +241,7 @@ const BlogProvider = ({ children }) => {
     blogs,
     getSingleBlog,
     handleBlogSubmit,
+    handleBlogUpdate,
     getMyBlogs,
     deleteBlog,
     fetchUserDetails,
