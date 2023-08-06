@@ -1,6 +1,7 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from '../context/AuthContext';
 import { BlogContext } from '../context/BlogContext';
+import { Link } from 'react-router-dom';
 
 const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
 
@@ -22,7 +23,6 @@ const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
     };
 
     const handleCopyLink = () => {
-        // Copy the blog link to the clipboard
         const blogLink = `${window.location.origin}/blogs/${blog_id}`;
         navigator.clipboard.writeText(blogLink)
           .then(() => console.log('Blog link copied to clipboard!'))
@@ -49,7 +49,7 @@ const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
                         {user?.id === creator_id && (
                             <>
                                 <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                    Edit
+                                    <Link to={`/edit-blog/${blog_id}`} >Edit</Link>
                                 </li>
                                 <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleDelete(blog_id)}>
                                     Delete
