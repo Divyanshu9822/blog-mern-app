@@ -4,12 +4,10 @@ import moment from 'moment'
 import { useContext, useEffect, useState } from 'react';
 import { BlogContext } from '../context/BlogContext';
 import BlogPostFeatureButton from './BlogPostFeatureButton';
-import { AuthContext } from '../context/AuthContext';
 
 
 const Blog = (props) => {
 
-    // const {user} = useContext(AuthContext)
     const containerStyle = {
         backgroundImage: `url(${props.blog.imageUrl})`,
         backgroundPosition: 'center center',
