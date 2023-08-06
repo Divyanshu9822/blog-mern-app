@@ -115,6 +115,30 @@ const BlogProvider = ({ children }) => {
     }
   };
 
+  const deleteBlog = async (blogId) => {
+    try {
+
+      const accessToken = localStorage.getItem('accessToken');
+
+      if (!accessToken) {
+        console.error('Access token not found. User may not be logged in.');
+        return;
+      }
+
+      await axios.delete(`https://blog-mern-app-c78l.onrender.com/api/blogs/my-blogs/${blogId}`, {
+        headers: {
+          Authorization: `${accessToken}`,
+        },
+      });
+
+      await fetchData();
+      console.log('Blog deleted successfully!');
+    } catch (error) {
+      console.error('Error deleting blog:', error);
+      console.log('Failed to delete blog. Please try again.');
+    }
+  };
+
   const postComment = async (blogId, commentText) => {
     try {
       const accessToken = localStorage.getItem('accessToken');
@@ -166,6 +190,7 @@ const BlogProvider = ({ children }) => {
     getSingleBlog,
     handleBlogSubmit,
     getMyBlogs,
+    deleteBlog,
     fetchUserDetails,
     postComment,
     deleteComment,
