@@ -45,8 +45,12 @@ const AuthProvider = ({ children }) => {
         },
       });
 
-      if (!response.ok) {
+      if (response.status === 403) {
+        // Access token is expired or invalid, navigate the user to the login page
         setUser(null);
+        setIsLoggedIn(false); // Optionally, set isLoggedIn to false
+        localStorage.removeItem('accessToken'); // Optionally, clear the expired token from localStorage
+        // window.location.href = '/login'; // Replace '/login' with your actual login page URL
         return;
       }
 
