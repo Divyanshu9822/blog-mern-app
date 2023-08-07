@@ -22,7 +22,7 @@ const LoggedInUser = () => {
                 onClick={toggleDropdown}
                 className="h-10 w-10 text-md flex items-center justify-center text-white font-bold uppercase rounded-full cursor-pointer bg-gray-500"
             >
-                {user?.fullName.substring(0,1)}
+                {user?.fullName.substring(0, 1)}
             </div>
 
             {isDropdownVisible && (
@@ -34,6 +34,11 @@ const LoggedInUser = () => {
                     <ul className="py-2 text-sm text-gray-700" aria-labelledby="avatarButton">
                         <li>
                             <Link to="/my-blogs" className="block px-4 py-2 hover:bg-gray-100">My Blogs</Link>
+                        </li>
+                        <li>
+                            <Link to="/write" className="block px-4 py-2 hover:bg-gray-100">
+                                Write Blog
+                            </Link>
                         </li>
                     </ul>
                     <div className="py-1">
