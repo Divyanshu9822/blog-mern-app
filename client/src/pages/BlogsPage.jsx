@@ -3,6 +3,7 @@ import { BlogContext } from '../context/BlogContext';
 import Blog from '../components/Blog';
 // import SearchBox from '../components/SearchBox';
 import Loader from '../components/Loader'
+import WriteButton from '../components/WriteButton'
 
 const BlogsPage = () => {
   const { blogs } = useContext(BlogContext);
@@ -24,6 +25,7 @@ const BlogsPage = () => {
         ) : (
           <div>No blogs found.</div>
         )}
+        <WriteButton/>
       </div>
     </div>
   );
