@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { BlogContext } from '../context/BlogContext';
 import Blog from '../components/Blog';
-import SearchBox from '../components/SearchBox';
+// import SearchBox from '../components/SearchBox';
 import Loader from '../components/Loader'
 
 const BlogsPage = () => {
@@ -15,7 +15,7 @@ const BlogsPage = () => {
 
   return (
     <div className='min-h-screen'>
-      <SearchBox />
+      {/* <SearchBox /> */}
       <div className='container mx-auto p-6 grid grid-cols-1'>
         {blogs.length > 0 ? (
           blogs.map((blog) => (

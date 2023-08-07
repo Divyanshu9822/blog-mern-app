@@ -50,7 +50,7 @@ const CreateBlogPage = () => {
 
   return (
     !isLoggedIn ?
-      (<div className="min-h-screen text-5xl flex items-center justify-center">
+      (<div className="min-h-screen text-4xl flex items-center justify-center text-center">
         Login to write a blog
       </div >)
       :

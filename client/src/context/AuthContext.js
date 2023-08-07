@@ -23,7 +23,7 @@ const AuthProvider = ({ children }) => {
       };
       const response = await axios.post('https://blog-mern-app-c78l.onrender.com/api/users/login', userData);
       const { accessToken } = response.data;
-      console.log(accessToken);
+      // console.log(accessToken);
 
       localStorage.setItem('accessToken', accessToken);
       setIsLoggedIn(true);

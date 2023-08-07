@@ -6,11 +6,13 @@ const CommentSection = ({ blogId , count}) => {
   const { postComment } = useContext(BlogContext); 
   const{isLoggedIn} = useContext(AuthContext)
   const [commentText, setCommentText] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
+    setIsSubmitting(true)
     await postComment(blogId, commentText); 
+    setIsSubmitting(false)
     setCommentText(''); 
   };
 
@@ -34,9 +36,12 @@ const CommentSection = ({ blogId , count}) => {
           ></textarea>
         </div>
         <div className="text-right">
-          <button type="submit"
-            className="py-2.5 px-4 text-md text-center text-white bg-green-700 rounded-lg hover:bg-green-800">
-            Post comment
+        <button type="submit" class={`inline-flex items-center px-5 py-3 font-semibold leading-6 text-md shadow rounded-md text-white bg-green-600 transition ease-in-out duration-150 ${isSubmitting ? 'cursor-not-allowed hover:bg-green-700' : 'hover:bg-green-600'}`} >
+            {isSubmitting && <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>}
+            {isSubmitting ? 'Posting...' : 'Post Comment'}
           </button>
         </div>
         {isLoggedIn ? '' : (<div class="absolute scale-[1.1] h-full w-full top-0 backdrop-blur-sm rounded-lg text-3xl flex items-center justify-center font-bold">

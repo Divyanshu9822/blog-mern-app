@@ -28,7 +28,7 @@ const MyBlogsPage = () => {
 
   if (!isLoggedIn) {
     return (
-      <div className='min-h-screen text-5xl flex items-center justify-center'>
+      <div className='min-h-screen text-4xl text-center flex items-center justify-center'>
         Login to view your blogs
       </div>
     );

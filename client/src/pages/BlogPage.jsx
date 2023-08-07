@@ -39,12 +39,12 @@ const BlogPage = () => {
         <main className="mt-10">
           <div className="mb-4 md:mb-0 w-full mx-auto relative">
             <div className="px-4 lg:px-0">
-              <h2 className="text-4xl font-semibold text-gray-800 leading-tight">
+              <h2 className="text-4xl font-semibold text-gray-800 leading-tight mb-4">
                 {title}
               </h2>
-              <p className="py-2 text-green-700 inline-flex items-center justify-center mb-2">
+              {/* <p className="py-2 text-green-700 inline-flex items-center justify-center mb-2">
                 Cryptocurrency
-              </p>
+              </p> */}
             </div>
 
             <img src={imageUrl} className="w-full object-cover rounded-md" alt='blog cover' style={{ height: '28em' }} />

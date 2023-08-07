@@ -31,13 +31,19 @@ const Blog = (props) => {
     return (
 
         <div className="container relative grid grid-cols-12 mx-auto border-b py-6">
-            <div className="absolute right-3 top-9">
+            <div className="absolute right-3 top-9 hidden lg:block">
                 <BlogPostFeatureButton creator_id={props.blog.user_id} blog_id={props.blog._id} />
             </div>
             <div className="bg-no-repeat bg-cover col-span-full rounded-lg lg:col-span-4" style={containerStyle}></div>
             <div className="flex flex-col px-4 py-6 col-span-full row-span-full lg:col-span-8 lg:p-10 justify-between">
                 <div>
-                    <Link key={props.blog._id} to={`/blogs/${props.blog._id}`}><h1 className="text-3xl font-semibold line-clamp-2">{props.blog.title}</h1></Link>
+                    <div className="flex items-start justify-between">
+                        <Link key={props.blog._id} to={`/blogs/${props.blog._id}`}><h1 className="text-3xl font-semibold line-clamp-2">{props.blog.title}</h1></Link>
+                        <div className='lg:hidden'>
+
+                        <BlogPostFeatureButton creator_id={props.blog.user_id} blog_id={props.blog._id} />
+                        </div>
+                    </div>
                     <div className="">
                         <span className="text-xs">{formattedDate}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
                         <span className="text-xs"><i class="fa-regular fa-eye"></i> {props.blog.impressions}</span>
