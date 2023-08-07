@@ -37,7 +37,7 @@ const LoggedInUser = () => {
                         </li>
                     </ul>
                     <div className="py-1">
-                        <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={handleClick}>Sign out</div>
+                        <div className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" onClick={handleClick}><i class="fa-solid fa-right-from-bracket"></i> &nbsp; Sign out</div>
                     </div>
                 </div>
             )}

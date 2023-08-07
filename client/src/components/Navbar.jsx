@@ -18,7 +18,7 @@ const Navbar = () => {
   };
 
   return (
-    <header className="bg-white text-black border-b sticky top-0 z-10">
+    <header className="bg-white text-black border-b sticky top-0 z-50">
       <nav className="flex items-center gap-5 justify-between px-6 py-4 relative">
         <div id="menu-btn" className="hidden max-[1050px]:block max-[1050px]:order-1 text-3xl cursor-pointer" onClick={toggle}>
           ☰
