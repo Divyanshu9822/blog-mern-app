@@ -41,14 +41,7 @@ const Navbar = () => {
             </Link>
           </li>
         </ul>
-        <ul className="flex gap-2 items-center ml-auto max-[1050px]:ml-0 max-[1050px]:order-3">
-          <li>
-            <Link to="/write">
-              <span className="py-2 px-3 cursor-pointer border border-black rounded-md hover:text-white hover:bg-black">
-                <i className="fa-regular fa-pen-to-square"></i> <span className="max-[1050px]:hidden">Write</span>
-              </span>
-            </Link>
-          </li>
+        <ul className="ml-auto max-[1050px]:ml-0 max-[1050px]:order-3">
           <li>
             {isLoggedIn ? (
               <LoggedInUser />
