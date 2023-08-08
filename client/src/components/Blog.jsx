@@ -45,8 +45,8 @@ const Blog = (props) => {
                         </div>
                     </div>
                     <div className="">
-                        <span className="text-xs">{formattedDate}</span>&nbsp;&nbsp;|&nbsp;&nbsp;
-                        <span className="text-xs"><i class="fa-regular fa-eye"></i> {props.blog.impressions}</span>
+                        <span className="text-xs">{formattedDate}</span>
+                        
                     </div>
                     <p className="flex-1 pt-2 line-clamp-3">{props.blog.summary}</p>
                     <div className="inline-flex items-center my-3  space-x-2 text-sm cursor-pointer">
@@ -56,14 +56,16 @@ const Blog = (props) => {
                         </svg>
                     </div>
                 </div>
-                <div className="flex items-center justify-between pt-2">
+                <div className="flex items-center justify-start pt-2">
                     <div className="flex space-x-2">
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
                             <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-6-3a2 2 0 11-4 0 2 2 0 014 0zm-2 4a5 5 0 00-4.546 2.916A5.986 5.986 0 0010 16a5.986 5.986 0 004.546-2.084A5 5 0 0010 11z" clipRule="evenodd"></path>
                         </svg>
                         <span className="self-center text-sm">by {userFullName}</span>
                     </div>
+                    &nbsp; • &nbsp;
                     <span className="text-xs">{props.blog.minsRead} min read</span>
+                    <span className="text-xs ml-auto"><i class="fa-regular fa-eye"></i> {props.blog.impressions}</span>
                 </div>
             </div>
         </div>
