@@ -7,11 +7,12 @@ import WriteButton from '../components/WriteButton';
 
 const HomePage = () => {
   const { blogs } = useContext(BlogContext);
+  const sortedBlogs = blogs.sort((a, b) => b.impressions - a.impressions);
 
-  const featuredBlog = blogs.length > 0 ? blogs[0] : null;
-  const trendingBlogs = blogs.length > 1 ? blogs.slice(1, 5) : [];
+  const featuredBlog = sortedBlogs.length > 0 ? blogs[0] : null;
+  const trendingBlogs = sortedBlogs.length > 1 ? blogs.slice(1, 5) : [];
 
-  if (blogs.length === 0) {
+  if (sortedBlogs.length === 0) {
     return <Loader/>
   }
 

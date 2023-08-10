@@ -13,9 +13,9 @@ const BlogProvider = ({ children }) => {
       const fetchedBlogs = response.data;
 
       // Sort blogs in descending order based on the "impressions" field
-      const sortedBlogs = fetchedBlogs.sort((a, b) => b.impressions - a.impressions);
+      // const sortedBlogs = fetchedBlogs.sort((a, b) => b.impressions - a.impressions);
 
-      setBlogs(sortedBlogs);
+      setBlogs(fetchedBlogs);
     } catch (error) {
       console.error('Error fetching data:', error);
     }
