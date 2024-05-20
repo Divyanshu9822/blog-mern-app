@@ -8,12 +8,21 @@ import CreateBlogPage from './pages/CreateBlogPage';
 import BlogPage from "./pages/BlogPage";
 import MyBlogsPage from "./pages/MyBlogsPage";
 import EditBlog from "./pages/EditBlog";
+import Test from "./pages/Test";
 
 function App() {
   return (
     
       <BrowserRouter>
         <Routes>
+          <Route
+            path="/test"
+            element={
+              <Layout>
+                <Test />
+              </Layout>
+            }
+          />
           <Route
             path="/"
             element={
