@@ -6,10 +6,11 @@ const router = express.Router();
 const {
   addComment,
   deleteComment,
+  getAllCommentsForBlog,
 } = require("../controllers/commentController");
 
-router.post("/:blogId", validateToken, addComment);
-
-router.delete("/:commentId", validateToken, deleteComment);
+router.post("/:blogId/comments/", validateToken, addComment);
+router.delete("/:blogId/comments/:commentId", validateToken, deleteComment);
+router.get("/:blogId/comments/", validateToken, getAllCommentsForBlog);
 
 module.exports = router;

@@ -17,9 +17,9 @@ router.post("/", validateToken, postBlog);
 router.put("/:id", validateToken, updateBlog);
 router.delete("/:id", validateToken, deleteBlog);
 
+router.use("/", commentsRouter);
+
 router.get("/:id", getBlog);
 router.get("/", getBlogs);
-
-router.use("/:postId/comments", commentsRouter);
 
 module.exports = router;
