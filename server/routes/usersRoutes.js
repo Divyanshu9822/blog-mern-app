@@ -11,7 +11,4 @@ router.post('/login', loginUser)
 
 router.get('/current', validateToken, currentUser)
 
-router.get('/:id', getUser)
-
-
 module.exports = router
