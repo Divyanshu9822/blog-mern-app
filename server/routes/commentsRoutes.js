@@ -7,7 +7,7 @@ const {
   addComment,
   deleteComment,
   getAllCommentsForBlog,
-} = require("../controllers/commentController");
+} = require("../controllers/commentsController");
 
 router.post("/:blogId/comments/", validateToken, addComment);
 router.delete("/:blogId/comments/:commentId", validateToken, deleteComment);
