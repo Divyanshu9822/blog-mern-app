@@ -103,7 +103,7 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ blogs });
+    res.status(200).json(blogs);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
