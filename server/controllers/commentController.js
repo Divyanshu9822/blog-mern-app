@@ -3,7 +3,7 @@ const Comment = require('../models/commentModel');
 const asyncHandler = require('express-async-handler')
 
 // Create a new comment for a specific blog post
-exports.createComment = asyncHandler(async (req, res) => {
+exports.addComment = asyncHandler(async (req, res) => {
   try {
     const { blogId } = req.params;
     const { commentText } = req.body;
