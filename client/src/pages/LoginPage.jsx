@@ -1,20 +1,24 @@
-import React, { useContext, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom'; 
-import { AuthContext } from '../context/AuthContext';
+import React, { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { loginUser } from "../features/auth/authSlice";
 
 const LoginPage = () => {
-  const { handleLogin } = useContext(AuthContext);
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [isSubmitting, setIsSubmitting] = useState(false)
+  const dispatch = useDispatch();
+  const { status, isLoggedIn, error } = useSelector((state) => state.auth);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsSubmitting(true)
-    await handleLogin(email, password);
-    setIsSubmitting(false)
-    navigate('/'); 
+    setIsSubmitting(true);
+    await dispatch(loginUser({ email, password }));
+    setIsSubmitting(false);
+    if (isLoggedIn) {
+      navigate("/");
+    }
   };
 
   return (
@@ -27,9 +31,8 @@ const LoginPage = () => {
             <h1 className="mt-4 text-2xl font-medium text-gray-800 capitalize lg:text-3xl">
               login to your account
             </h1>
-            {/* Add the link to the registration page */}
             <p className="mt-4 text-gray-600 md:text-lg">
-              Don't have an account?{' '}
+              Don't have an account?{" "}
               <Link to="/register" className="text-blue-500">
                 Register here
               </Link>
@@ -93,14 +96,43 @@ const LoginPage = () => {
               </div>
 
               <div className="mt-8 md:flex md:items-center">
-                <button type="submit" onClick={handleSubmit} class={`w-full md:w-1/2 inline-flex justify-center items-center px-5 py-3 font-semibold leading-6 text-md shadow rounded-md text-white bg-blue-500 transition ease-in-out duration-150 ${isSubmitting ? 'cursor-not-allowed hover:bg-blue-400' : 'hover:bg-blue-600'}`} >
-                    {isSubmitting && <svg class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
-                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-                    </svg>}
-                    {isSubmitting ? 'Signing in...' : 'Sign in'}
+                <button
+                  type="submit"
+                  className={`w-full md:w-1/2 inline-flex justify-center items-center px-5 py-3 font-semibold leading-6 text-md shadow rounded-md text-white bg-blue-500 transition ease-in-out duration-150 ${
+                    isSubmitting
+                      ? "cursor-not-allowed hover:bg-blue-400"
+                      : "hover:bg-blue-600"
+                  }`}
+                  disabled={isSubmitting}
+                >
+                  {isSubmitting && (
+                    <svg
+                      className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                    >
+                      <circle
+                        className="opacity-25"
+                        cx="12"
+                        cy="12"
+                        r="10"
+                        stroke="currentColor"
+                        strokeWidth="4"
+                      ></circle>
+                      <path
+                        className="opacity-75"
+                        fill="currentColor"
+                        d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                      ></path>
+                    </svg>
+                  )}
+                  {isSubmitting ? "Signing in..." : "Sign in"}
                 </button>
               </div>
+              {status === "failed" && (
+                <p className="mt-4 text-red-500">{error}</p>
+              )}
             </form>
           </div>
         </div>
