@@ -126,7 +126,7 @@ exports.postBlog = asyncHandler(async (req, res) => {
     summary: req.body.summary,
     imageUrl: req.body.imageUrl,
     minsRead: req.body.minsRead,
-    user_id: req.user.id,
+    author: req.user.id,
   });
 
   res.status(200).json(blog);
