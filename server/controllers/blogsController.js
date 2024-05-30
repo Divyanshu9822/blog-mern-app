@@ -141,28 +141,44 @@ exports.updateBlog = asyncHandler(async (req, res) => {
     throw new Error("Please fill all fields");
   }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    blogId,
-    { title, content, summary, imageUrl },
-    { new: true }
-  );
+  const blog = await Blog.findById(blogId);
 
-  if (!updatedBlog) {
+  if (!blog) {
     res.status(404);
     throw new Error("Blog not found");
   }
+
+  if (blog.author.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not authorized to update this blog");
+  }
+
+  blog.title = title;
+  blog.content = content;
+  blog.summary = summary;
+  blog.imageUrl = imageUrl;
+
+  const updatedBlog = await blog.save();
 
   res.status(200).json(updatedBlog);
 });
 
 exports.deleteBlog = asyncHandler(async (req, res) => {
   const blogId = req.params.id;
-  const deletedBlog = await Blog.findByIdAndRemove(blogId);
 
-  if (!deletedBlog) {
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
     res.status(404);
     throw new Error("Blog not found");
   }
+
+  if (blog.author.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not authorized to delete this blog");
+  }
+
+  await blog.remove();
 
   res.status(200).json({ message: "Blog deleted successfully" });
 });
