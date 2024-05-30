@@ -8,6 +8,7 @@ const {
   updateBlog,
   deleteBlog,
 } = require("../controllers/blogsController");
+const commentsRouter = require("./commentsRoutes");
 
 const router = express.Router();
 
@@ -18,5 +19,7 @@ router.delete("/:id", validateToken, deleteBlog);
 
 router.get("/:id", getBlog);
 router.get("/", getBlogs);
+
+router.use("/:postId/comments", commentsRouter);
 
 module.exports = router;
