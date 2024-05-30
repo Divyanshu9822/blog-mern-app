@@ -1,70 +1,45 @@
-const Blog = require('../models/blogModel');
-const Comment = require('../models/commentModel');
-const asyncHandler = require('express-async-handler')
+const Comment = require("../models/commentModel");
+const asyncHandler = require("express-async-handler");
 
-// Create a new comment for a specific blog post
+exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
+  try {
+    const comments = await Comment.find({ blogId: req.params.blogId });
+
+    res.status(200).json(comments);
+  } catch (error) {
+    console.error("Error fetching comments:", error);
+    res.status(500).json({ message: "Failed to fetch comments", error });
+  }
+});
+
 exports.addComment = asyncHandler(async (req, res) => {
   try {
-    const { blogId } = req.params;
-    const { commentText } = req.body;
-    const { id } = req.user; // Assuming you have the user ID from the token validation middleware
-
-    // Find the blog post by its ID
-    const blog = await Blog.findById(blogId);
-    if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
-    }
-
-    // Create a new comment object
+    console.log(req.user)
+    console.log(req.params.blogId)
     const newComment = new Comment({
-      user_id: id,
-      commentText
+      blogId: req.params.blogId,
+      author: req.user.id,
+      content: req.body.content,
     });
-
-    // Save the comment to the blog's comments array
-    blog.comments.unshift(newComment); // Add the new comment at the 0th index
-    await blog.save();
-
-    res.status(201).json(blog);
+    await newComment.save();
+    res.status(201).json(newComment);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error adding comment:", error);
+    res.status(500).json({ message: "Failed to add comment", error });
   }
 });
 
 exports.deleteComment = asyncHandler(async (req, res) => {
   try {
-    const { blogId, commentId } = req.params;
-    console.log(blogId)
-    console.log(commentId)
-    const { id } = req.user; // Assuming you have the user ID from the token validation middleware
-
-    // Find the blog post by its ID
-    const blog = await Blog.findById(blogId);
-    if (!blog) {
-      return res.status(404).json({ error: 'Blog post not found' });
+    const deletedComment = await Comment.findByIdAndDelete(
+      req.params.commentId
+    );
+    if (!deletedComment) {
+      return res.status(404).json({ message: "Comment not found" });
     }
-
-    // Find the comment to be deleted
-    const commentToDelete = blog.comments.find(comment => comment._id == commentId);
-    if (!commentToDelete) {
-      return res.status(404).json({ error: 'Comment not found' });
-    }
-
-    // Ensure that the comment is made by the same user who is trying to delete it
-    if (commentToDelete.user_id.toString() !== id) {
-      return res.status(403).json({ error: 'You are not authorized to delete this comment' });
-    }
-
-    // Remove the comment from the blog's comments array
-    blog.comments = blog.comments.filter(comment => comment._id != commentId);
-    await blog.save();
-
-    res.status(200).json(blog);
+    res.status(204).send();
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    console.error("Error deleting comment:", error);
+    res.status(500).json({ message: "Failed to delete comment", error });
   }
 });
-
-
-
-
