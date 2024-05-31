@@ -3,7 +3,7 @@ import { AuthContext } from '../context/AuthContext';
 import { BlogContext } from '../context/BlogContext';
 import { Link } from 'react-router-dom';
 
-const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
+const BlogPostOptions = ({ creator_id, blog_id }) => {
 
     const [isDropdownVisible, setIsDropdownVisible] = useState(false);
     const { user } = useContext(AuthContext)
@@ -63,5 +63,5 @@ const BlogPostFeatureButton = ({ creator_id, blog_id }) => {
     )
 }
 
-export default BlogPostFeatureButton
+export default BlogPostOptions
 

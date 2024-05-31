@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import moment from "moment";
-import BlogPostFeatureButton from "./BlogPostFeatureButton";
+import BlogPostOptions from "./BlogPostOptions";
 
 const Blog = (props) => {
   const containerStyle = {
@@ -15,7 +15,7 @@ const Blog = (props) => {
   return (
     <div className="container relative grid grid-cols-12 mx-auto border-b py-6">
       <div className="absolute right-3 top-9 hidden lg:block">
-        <BlogPostFeatureButton
+        <BlogPostOptions
           creator_id={props.blog.user_id}
           blog_id={props.blog._id}
         />
@@ -33,7 +33,7 @@ const Blog = (props) => {
               </h1>
             </Link>
             <div className="lg:hidden">
-              <BlogPostFeatureButton
+              <BlogPostOptions
                 creator_id={props.blog.user_id}
                 blog_id={props.blog._id}
               />
