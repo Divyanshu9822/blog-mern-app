@@ -3,7 +3,7 @@ import { getAllBlogs } from "../features/blogs/blogsSlice";
 import Blog from "../components/Blog";
 // import SearchBox from '../components/SearchBox';
 import Loader from "../components/Loader";
-import WriteButton from "../components/WriteButton";
+import WriteBlogButton from "../components/WriteBlogButton";
 import { useEffect } from "react";
 
 const BlogsPage = () => {
@@ -34,7 +34,7 @@ const BlogsPage = () => {
         ) : (
           <div>No blogs found.</div>
         )}
-        <WriteButton />
+        <WriteBlogButton />
       </div>
     </div>
   );

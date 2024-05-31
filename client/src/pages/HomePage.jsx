@@ -3,7 +3,7 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { getAllBlogs } from "../features/blogs/blogsSlice";
 import Loader from "../components/Loader";
-import WriteButton from "../components/WriteButton";
+import WriteBlogButton from "../components/WriteBlogButton";
 import BlogCard from "../components/BlogCard";
 import moment from "moment";
 
@@ -93,7 +93,7 @@ const HomePage = () => {
           </div>
         </div>
       </section>
-      <WriteButton />
+      <WriteBlogButton />
     </div>
   );
 };
