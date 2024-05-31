@@ -11,7 +11,8 @@ const initialState = {
 export const loginUser = createAsyncThunk("auth/login", async (credentials) => {
   const response = await login(credentials);
   localStorage.setItem("accessToken", response.data.accessToken);
-  return response.data;
+  const currentUserResponse = await getCurrentUser();
+  return currentUserResponse.data;
 });
 
 export const registerUser = createAsyncThunk(
