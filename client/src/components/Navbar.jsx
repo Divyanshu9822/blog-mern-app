@@ -108,7 +108,7 @@ const Navbar = () => {
                       </li>
                       <li>
                         <Link
-                          to="/write"
+                          to="/write-blog"
                           className="block px-4 py-2 hover:bg-gray-100"
                         >
                           Write Blog
