@@ -43,7 +43,31 @@ exports.addComment = asyncHandler(async (req, res) => {
       content: req.body.content,
     });
     await newComment.save();
-    res.status(201).json(newComment);
+
+    const commentWithAuthorName = await Comment.aggregate([
+      { $match: { _id: newComment._id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
+
+    res.status(201).json(commentWithAuthorName[0]);
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).json({ message: "Failed to add comment", error });
