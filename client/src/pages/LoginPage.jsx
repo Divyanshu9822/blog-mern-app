@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { loginUser } from "../features/auth/authSlice";
@@ -8,7 +8,9 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const dispatch = useDispatch();
-  const { status, isLoggedIn, error } = useSelector((state) => state.auth);
+  const { status, isLoggedIn, error, user } = useSelector(
+    (state) => state.auth
+  );
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleSubmit = async (e) => {
@@ -16,10 +18,13 @@ const LoginPage = () => {
     setIsSubmitting(true);
     await dispatch(loginUser({ email, password }));
     setIsSubmitting(false);
-    if (isLoggedIn) {
+  };
+
+  useEffect(() => {
+    if (isLoggedIn && user) {
       navigate("/");
     }
-  };
+  }, [status, isLoggedIn, user, navigate]);
 
   return (
     <section className="bg-white flex items-center justify-center h-screen">

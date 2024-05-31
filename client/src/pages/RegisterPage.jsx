@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { registerUser } from "../features/auth/authSlice";
@@ -22,8 +22,13 @@ const RegisterPage = () => {
     setIsSubmitting(true);
     await dispatch(registerUser({ fullName, email, password }));
     setIsSubmitting(false);
-    navigate("/login");
   };
+
+  useEffect(() => {
+    if (status === "succeeded") {
+      navigate("/login");
+    }
+  }, [status, navigate]);
 
   return (
     <section className="bg-white flex items-center justify-center h-screen">
