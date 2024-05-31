@@ -82,7 +82,7 @@ const Blog = (props) => {
           &nbsp; • &nbsp;
           <span className="text-xs">{props.blog.minsRead} min read</span>
           <span className="text-xs ml-auto">
-            <i class="fa-regular fa-eye"></i> {props.blog.impressions}
+            <i className="fa-regular fa-eye"></i> {props.blog.impressions}
           </span>
         </div>
       </div>

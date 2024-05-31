@@ -21,7 +21,7 @@ const BlogCard = (props) => {
           <div className="flex justify-between items-center">
             <span className="text-xs">{formattedDate}</span>
             <span className="text-xs">
-              <i class="fa-regular fa-eye"></i> {props.blog.impressions}
+              <i className="fa-regular fa-eye"></i> {props.blog.impressions}
             </span>
           </div>
           <h3 className="flex-1 my-2 text-lg font-semibold line-clamp-1 overflow-hidden">

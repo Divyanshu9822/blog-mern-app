@@ -37,22 +37,22 @@ const BlogPostOptions = ({ creator_id, blog_id }) => {
                 onClick={toggleDropdown}
                 className="h-10 w-10 text-md flex items-center justify-center text-white font-bold rounded-full cursor-pointer bg-gray-500"
             >
-                <i class="fa-solid fa-ellipsis-vertical"></i>
+                <i className="fa-solid fa-ellipsis-vertical"></i>
             </div>
 
             {isDropdownVisible && (
                 <div id="userDropdown" className="z-10 absolute right-0 top-11 bg-white divide-y divide-gray-100 rounded-lg shadow-xl w-44">
                     <ul className="py-2 text-sm text-gray-700" aria-labelledby="avatarButton">
                         <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={handleCopyLink}>
-                            <i class="fa-solid fa-link"></i> &nbsp; Copy Blog Link
+                            <i className="fa-solid fa-link"></i> &nbsp; Copy Blog Link
                         </li>
                         {user?.id === creator_id && (
                             <>
                                 <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer">
-                                    <Link to={`/edit-blog/${blog_id}`} ><i class="fa-solid fa-pencil"></i> &nbsp; Edit</Link>
+                                    <Link to={`/edit-blog/${blog_id}`} ><i className="fa-solid fa-pencil"></i> &nbsp; Edit</Link>
                                 </li>
                                 <li className="block px-4 py-2 hover:bg-gray-100 cursor-pointer" onClick={() => handleDelete(blog_id)}>
-                                    <i class="fa-solid fa-trash"></i> &nbsp; Delete
+                                    <i className="fa-solid fa-trash"></i> &nbsp; Delete
                                 </li>
                             </>
                         )}
