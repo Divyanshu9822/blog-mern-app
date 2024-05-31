@@ -4,6 +4,15 @@ const API_URL = "http://localhost:8000/api/blogs";
 
 export const fetchBlogs = () => axios.get(API_URL);
 export const fetchSingleBlog = (blogId) => axios.get(`${API_URL}/${blogId}`);
+export const deleteBlog = (blogId) => {
+  const accessToken = localStorage.getItem("accessToken");
+  return axios.delete(`${API_URL}/${blogId}`, {
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+};
+
 export const fetchComments = (blogId) =>
   axios.get(`${API_URL}/${blogId}/comments`);
 

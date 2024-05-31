@@ -6,6 +6,7 @@ import {
   updateBlog,
   fetchMyBlogs,
   postComment,
+  deleteBlog,
 } from "./blogsAPI";
 
 const initialState = {
@@ -27,6 +28,14 @@ export const getSingleBlog = createAsyncThunk(
   async (blogId) => {
     const response = await fetchSingleBlog(blogId);
     return response.data;
+  }
+);
+
+export const removeBlog = createAsyncThunk(
+  "blogs/deleteBlog",
+  async (blogId) => {
+    await deleteBlog(blogId);
+    return blogId;
   }
 );
 
@@ -129,6 +138,17 @@ const blogsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(addCommentInBlog.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(removeBlog.fulfilled, (state, action) => {
+        state.blogs = state.blogs.filter(blog => blog.id !== action.payload);
+        state.status = "succeeded";
+      })
+      .addCase(removeBlog.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(removeBlog.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
