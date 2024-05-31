@@ -15,10 +15,7 @@ const Blog = (props) => {
   return (
     <div className="container relative grid grid-cols-12 mx-auto border-b py-6">
       <div className="absolute right-3 top-9 hidden lg:block">
-        <BlogPostOptions
-          creator_id={props.blog.user_id}
-          blog_id={props.blog._id}
-        />
+        <BlogPostOptions author={props.blog.author} blogId={props.blog._id} />
       </div>
       <div
         className="bg-no-repeat bg-cover col-span-full rounded-lg lg:col-span-4"
@@ -34,8 +31,8 @@ const Blog = (props) => {
             </Link>
             <div className="lg:hidden">
               <BlogPostOptions
-                creator_id={props.blog.user_id}
-                blog_id={props.blog._id}
+                author={props.blog.author}
+                blogId={props.blog._id}
               />
             </div>
           </div>
