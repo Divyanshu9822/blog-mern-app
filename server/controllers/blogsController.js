@@ -129,7 +129,29 @@ exports.postBlog = asyncHandler(async (req, res) => {
     author: req.user.id,
   });
 
-  res.status(200).json(blog);
+  const blogWithAuthor = await Blog.aggregate([
+    { $match: { _id: blog._id } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "authorInfo",
+      },
+    },
+    { $unwind: "$authorInfo" },
+    {
+      $addFields: {
+        authorName: "$authorInfo.fullName",
+      },
+    },
+    {
+      $project: {
+        authorInfo: 0,
+      },
+    },
+  ]);
+  res.status(200).json(blogWithAuthor[0]);
 });
 
 exports.updateBlog = asyncHandler(async (req, res) => {
@@ -160,7 +182,29 @@ exports.updateBlog = asyncHandler(async (req, res) => {
 
   const updatedBlog = await blog.save();
 
-  res.status(200).json(updatedBlog);
+  const updatedBlogWithAuthor = await Blog.aggregate([
+    { $match: { _id: updatedBlog._id } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "authorInfo",
+      },
+    },
+    { $unwind: "$authorInfo" },
+    {
+      $addFields: {
+        authorName: "$authorInfo.fullName",
+      },
+    },
+    {
+      $project: {
+        authorInfo: 0,
+      },
+    },
+  ]);
+  res.status(200).json(updatedBlogWithAuthor[0]);
 });
 
 exports.deleteBlog = asyncHandler(async (req, res) => {
