@@ -2,7 +2,7 @@ import React from 'react'
 import moment from 'moment'
 
 const Comment = ({ authorName, date, content }) => {
-    const formattedDate = moment(date).format("MMMM d, YYYY");
+    const formattedDate = moment(date).format("MMMM D, YYYY");
 
     return (
         <div className="p-6 mb-2 border text-base bg-white rounded-lg">
