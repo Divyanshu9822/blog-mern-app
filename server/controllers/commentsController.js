@@ -5,8 +5,8 @@ const asyncHandler = require("express-async-handler");
 exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
   try {
     const comments = await Comment.aggregate([
-      { $sort: { date: -1 } },
-      { $match: { _id: new mongoose.Types.ObjectId(req.params.blogId) } },
+      { $sort: { timestamp: -1 } },
+      { $match: { blogId: new mongoose.Types.ObjectId(req.params.blogId) } },
       {
         $lookup: {
           from: "users",
