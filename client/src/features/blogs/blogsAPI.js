@@ -33,4 +33,12 @@ export const postComment = ({ blogId, content }) => {
 
 export const updateBlog = (blog) =>
   axios.put(`${API_URL}/${blog.blogId}`, blog);
-export const fetchMyBlogs = () => axios.get(`${API_URL}/my-blogs`);
+
+export const fetchMyBlogs = () => {
+  const accessToken = localStorage.getItem("accessToken");
+  return axios.get(`${API_URL}/my-blogs`, {
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+};

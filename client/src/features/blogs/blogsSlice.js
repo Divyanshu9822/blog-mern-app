@@ -142,7 +142,7 @@ const blogsSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(removeBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter(blog => blog.id !== action.payload);
+        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
         state.status = "succeeded";
       })
       .addCase(removeBlog.pending, (state) => {
