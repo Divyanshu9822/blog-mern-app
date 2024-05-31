@@ -16,6 +16,16 @@ export const deleteBlog = (blogId) => {
 export const fetchComments = (blogId) =>
   axios.get(`${API_URL}/${blogId}/comments`);
 
+export const postBlog = async (blogData) => {
+  const accessToken = localStorage.getItem("accessToken");
+  const response = await axios.post(API_URL, blogData, {
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+  return response.data;
+};
+
 export const postComment = ({ blogId, content }) => {
   const accessToken = localStorage.getItem("accessToken");
   return axios.post(
@@ -31,8 +41,24 @@ export const postComment = ({ blogId, content }) => {
   );
 };
 
-export const updateBlog = (blog) =>
-  axios.put(`${API_URL}/${blog.blogId}`, blog);
+export const uploadImage = async (coverImage) => {
+  const formData = new FormData();
+  formData.append("image", coverImage);
+  const response = await axios.post(
+    `http://localhost:8000/api/upload`,
+    formData
+  );
+  return response.data.imageUrl;
+};
+
+export const updateBlog = async (id, blogData) => {
+  const accessToken = localStorage.getItem("accessToken");
+  await axios.put(`${API_URL}/${id}`, blogData, {
+    headers: {
+      Authorization: accessToken,
+    },
+  });
+};
 
 export const fetchMyBlogs = () => {
   const accessToken = localStorage.getItem("accessToken");

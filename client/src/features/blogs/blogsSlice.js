@@ -7,6 +7,8 @@ import {
   fetchMyBlogs,
   postComment,
   deleteBlog,
+  uploadImage,
+  postBlog,
 } from "./blogsAPI";
 
 const initialState = {
@@ -51,15 +53,55 @@ export const addCommentInBlog = createAsyncThunk(
   "blogs/postComment",
   async ({ blogId, content }) => {
     const response = await postComment({ blogId, content });
-    console.log(response);
     return response.data;
   }
 );
 
 export const updateBlogPost = createAsyncThunk(
-  "blogs/updateBlog",
-  async (blog) => {
-    const response = await updateBlog(blog);
+  "blogs/updateBlogPost",
+  async ({ id, title, content, summary, coverImage, imageUrl }) => {
+    if (coverImage) {
+      imageUrl = await uploadImage(coverImage);
+    }
+
+    const wordsPerMinute = 200;
+    const wordCount = content.split(/\s+/).length;
+    const minsRead = Math.ceil(wordCount / wordsPerMinute);
+
+    const blogData = {
+      title,
+      content,
+      summary,
+      imageUrl,
+      minsRead,
+    };
+
+    const response = await updateBlog(id, blogData);
+    return response.data;
+  }
+);
+
+export const createBlogPost = createAsyncThunk(
+  "blogs/createBlogPost",
+  async ({ title, content, summary, coverImage }) => {
+    let imageUrl = null;
+    if (coverImage) {
+      imageUrl = await uploadImage(coverImage);
+    }
+
+    const wordsPerMinute = 200;
+    const wordCount = content.split(/\s+/).length;
+    const minsRead = Math.ceil(wordCount / wordsPerMinute);
+
+    const blogData = {
+      title,
+      content,
+      summary,
+      imageUrl,
+      minsRead,
+    };
+
+    const response = await postBlog(blogData);
     return response.data;
   }
 );
@@ -149,6 +191,17 @@ const blogsSlice = createSlice({
         state.status = "loading";
       })
       .addCase(removeBlog.rejected, (state, action) => {
+        state.status = "failed";
+        state.error = action.error.message;
+      })
+      .addCase(createBlogPost.pending, (state) => {
+        state.status = "loading";
+      })
+      .addCase(createBlogPost.fulfilled, (state, action) => {
+        state.blogs.unshift(action.payload);
+        state.status = "succeeded";
+      })
+      .addCase(createBlogPost.rejected, (state, action) => {
         state.status = "failed";
         state.error = action.error.message;
       });
