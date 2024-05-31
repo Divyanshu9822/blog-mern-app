@@ -50,7 +50,7 @@ function App() {
           }
         />
         <Route
-          path="/write"
+          path="/write-blog"
           element={
             <Layout>
               <CreateBlogPage />
