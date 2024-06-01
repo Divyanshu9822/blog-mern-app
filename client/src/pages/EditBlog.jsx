@@ -23,7 +23,6 @@ const EditBlog = () => {
 
   useEffect(() => {
     if (blog) {
-        console.log('blog', blog)
       setContent(blog.content);
       setTitle(blog.title);
       setCoverImageUrl(blog.imageUrl);
@@ -58,7 +57,6 @@ const EditBlog = () => {
       imageUrl: coverImageUrl,
       coverImage,
     };
-    console.log('payload to dispatch method',updatedBlog)
     await dispatch(updateBlogPost(updatedBlog));
     setIsSubmitting(false);
     setContent("");
