@@ -82,6 +82,7 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
   try {
     const blogs = await Blog.aggregate([
       { $match: { author: new mongoose.Types.ObjectId(user_id) } },
+      { $sort: { date: -1 } },
       {
         $lookup: {
           from: "users",
