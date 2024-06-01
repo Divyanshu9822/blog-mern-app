@@ -223,7 +223,7 @@ exports.deleteBlog = asyncHandler(async (req, res) => {
     throw new Error("Not authorized to delete this blog");
   }
 
-  await blog.remove();
+  await Blog.findByIdAndDelete(blogId);
 
   res.status(200).json({ message: "Blog deleted successfully" });
 });
