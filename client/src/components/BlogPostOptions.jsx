@@ -19,7 +19,7 @@ const BlogPostOptions = ({ author, blogId }) => {
     }
 
     try {
-      await dispatch(removeBlog(blogId)).unwrap();
+      await dispatch(removeBlog(blogId));
       console.log("Blog deleted successfully");
     } catch (error) {
       console.error("Failed to delete the blog:", error);
