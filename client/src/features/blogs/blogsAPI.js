@@ -18,12 +18,11 @@ export const fetchComments = (blogId) =>
 
 export const postBlog = async (blogData) => {
   const accessToken = localStorage.getItem("accessToken");
-  const response = await axios.post(API_URL, blogData, {
+  return axios.post(API_URL, blogData, {
     headers: {
       Authorization: accessToken,
     },
   });
-  return response.data;
 };
 
 export const postComment = ({ blogId, content }) => {
@@ -53,7 +52,7 @@ export const uploadImage = async (coverImage) => {
 
 export const updateBlog = async (id, blogData) => {
   const accessToken = localStorage.getItem("accessToken");
-  await axios.put(`${API_URL}/${id}`, blogData, {
+  return axios.put(`${API_URL}/${id}`, blogData, {
     headers: {
       Authorization: accessToken,
     },
