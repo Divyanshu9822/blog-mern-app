@@ -10,10 +10,10 @@ const BlogsPage = () => {
   const { blogs, status } = useSelector((state) => state.blogs);
 
   useEffect(() => {
-    if (status === "idle") {
+    if (status === "idle" || blogs.length === 0) {
       dispatch(getAllBlogs());
     }
-  }, [status, dispatch]);
+  }, [status, blogs.length, dispatch]);
 
   if (status === "loading" && !blogs) {
     return <Loader />;
