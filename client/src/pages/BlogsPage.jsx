@@ -1,7 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { getAllBlogs } from "../features/blogs/blogsSlice";
 import Blog from "../components/Blog";
-// import SearchBox from '../components/SearchBox';
 import Loader from "../components/Loader";
 import WriteBlogButton from "../components/WriteBlogButton";
 import { useEffect } from "react";
@@ -16,7 +15,7 @@ const BlogsPage = () => {
     }
   }, [status, dispatch]);
 
-  if (status === "loading") {
+  if (status === "loading" && !blogs) {
     return <Loader />;
   }
 
@@ -24,12 +23,10 @@ const BlogsPage = () => {
     return <div>Error loading blogs. Please try again.</div>;
   }
 
-
   return (
     <div className="min-h-screen">
-      {/* <SearchBox /> */}
       <div className="container mx-auto p-6 grid grid-cols-1">
-        {blogs.length > 0 ? (
+        {blogs && blogs.length > 0 ? (
           blogs.map((blog) => <Blog blog={blog} key={blog._id} />)
         ) : (
           <div>No blogs found.</div>
