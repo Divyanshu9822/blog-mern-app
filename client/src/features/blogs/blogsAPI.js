@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:8000/api/blogs";
+const API_URL = `${process.env.REACT_APP_BASE_API_URL}/blogs`;
 
 export const fetchBlogs = () => axios.get(API_URL);
 export const fetchSingleBlog = (blogId) => axios.get(`${API_URL}/${blogId}`);
@@ -44,7 +44,7 @@ export const uploadImage = async (coverImage) => {
   const formData = new FormData();
   formData.append("image", coverImage);
   const response = await axios.post(
-    `http://localhost:8000/api/upload`,
+    `${process.env.REACT_APP_BASE_API_URL}/upload`,
     formData
   );
   return response.data.imageUrl;
