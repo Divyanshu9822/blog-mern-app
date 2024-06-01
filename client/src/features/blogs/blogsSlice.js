@@ -184,7 +184,10 @@ const blogsSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(removeBlog.fulfilled, (state, action) => {
-        state.blogs = state.blogs.filter((blog) => blog.id !== action.payload);
+        state.blogs = state.blogs.filter((blog) => blog._id !== action.payload);
+        state.myBlogs = state.myBlogs.filter(
+          (blog) => blog._id !== action.payload
+        );
         state.status = "succeeded";
       })
       .addCase(removeBlog.pending, (state) => {
@@ -199,6 +202,8 @@ const blogsSlice = createSlice({
       })
       .addCase(createBlogPost.fulfilled, (state, action) => {
         state.blogs.unshift(action.payload);
+        state.myBlogs.unshift(action.payload);
+        console.log("New blog added to state:", action.payload);
         state.status = "succeeded";
       })
       .addCase(createBlogPost.rejected, (state, action) => {
