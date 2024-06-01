@@ -1,38 +1,107 @@
-const asyncHandler = require('express-async-handler');
-const Blog = require('../models/blogModel');
+const asyncHandler = require("express-async-handler");
+const mongoose = require("mongoose");
+const Blog = require("../models/blogModel");
 
-// Get all blogs
 exports.getBlogs = asyncHandler(async (req, res) => {
-  const blogs = await Blog.find().sort({ date: -1 });
-  res.json(blogs);
+  try {
+    const blogs = await Blog.aggregate([
+      { $sort: { date: -1 } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
+
+    res.status(200).json(blogs);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
-// Get a single blog by ID
 exports.getBlog = asyncHandler(async (req, res) => {
   const blogId = req.params.id;
-  
-  const blog = await Blog.findById(blogId);
 
-  if (!blog) {
-    res.status(404);
-    throw new Error('Blog not found');
+  try {
+    const blog = await Blog.aggregate([
+      { $match: { _id: new mongoose.Types.ObjectId(blogId) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
+
+    if (!blog || blog.length === 0) {
+      res.status(404);
+      throw new Error("Blog not found");
+    }
+
+    await Blog.updateOne(
+      { _id: new mongoose.Types.ObjectId(blogId) },
+      { $inc: { impressions: 1 } }
+    );
+
+    res.status(200).json(blog[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  // Increment the impressions_count field and save the updated document
-  blog.impressions += 1;
-  await blog.save();
-
-  res.status(200).json(blog);
 });
 
 exports.getMyBlogs = asyncHandler(async (req, res) => {
-  // Access the user ID from the decoded token (assuming validateTokenHandler middleware has been used before this)
-  console.log(req.user)
   const user_id = req.user.id;
 
   try {
-    // Fetch blogs from the database that are owned by the user
-    const blogs = await Blog.find({ user_id });
+    const blogs = await Blog.aggregate([
+      { $match: { author: new mongoose.Types.ObjectId(user_id) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
 
     res.status(200).json({ blogs });
   } catch (error) {
@@ -40,61 +109,76 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
   }
 });
 
-// Post a single blog
 exports.postBlog = asyncHandler(async (req, res) => {
-  if (!req.body.title || !req.body.content || !req.body.imageUrl || !req.body.summary) {
-    res.status(400)
-    throw new Error('please fill all fields')
+  if (
+    !req.body.title ||
+    !req.body.content ||
+    !req.body.imageUrl ||
+    !req.body.summary
+  ) {
+    res.status(400);
+    throw new Error("please fill all fields");
   }
-
-  // console.log(req.user)
 
   const blog = await Blog.create({
     title: req.body.title,
     content: req.body.content,
     summary: req.body.summary,
     imageUrl: req.body.imageUrl,
-    minsRead:req.body.minsRead,
-    user_id: req.user.id,
-  })
-  // console.log(blog.user_id);
+    minsRead: req.body.minsRead,
+    author: req.user.id,
+  });
 
-  res.status(200).json(blog)
+  res.status(200).json(blog);
 });
 
-// Update a blog by ID
 exports.updateBlog = asyncHandler(async (req, res) => {
   const blogId = req.params.id;
   const { title, content, summary, imageUrl } = req.body;
 
   if (!title || !content || !summary || !imageUrl) {
     res.status(400);
-    throw new Error('Please fill all fields');
+    throw new Error("Please fill all fields");
   }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(
-    blogId,
-    { title, content, summary, imageUrl },
-    { new: true } // Return the updated blog
-  );
+  const blog = await Blog.findById(blogId);
 
-  if (!updatedBlog) {
+  if (!blog) {
     res.status(404);
-    throw new Error('Blog not found');
+    throw new Error("Blog not found");
   }
+
+  if (blog.author.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not authorized to update this blog");
+  }
+
+  blog.title = title;
+  blog.content = content;
+  blog.summary = summary;
+  blog.imageUrl = imageUrl;
+
+  const updatedBlog = await blog.save();
 
   res.status(200).json(updatedBlog);
 });
 
-// Delete a blog by ID
 exports.deleteBlog = asyncHandler(async (req, res) => {
   const blogId = req.params.id;
-  const deletedBlog = await Blog.findByIdAndRemove(blogId);
 
-  if (!deletedBlog) {
+  const blog = await Blog.findById(blogId);
+
+  if (!blog) {
     res.status(404);
-    throw new Error('Blog not found');
+    throw new Error("Blog not found");
   }
 
-  res.status(200).json({ message: 'Blog deleted successfully' });
+  if (blog.author.toString() !== req.user.id) {
+    res.status(401);
+    throw new Error("Not authorized to delete this blog");
+  }
+
+  await blog.remove();
+
+  res.status(200).json({ message: "Blog deleted successfully" });
 });
