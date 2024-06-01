@@ -1,31 +1,37 @@
-import React, { useContext } from 'react';
-import { BlogContext } from '../context/BlogContext';
-import Blog from '../components/Blog';
-// import SearchBox from '../components/SearchBox';
-import Loader from '../components/Loader'
-import WriteButton from '../components/WriteButton'
+import { useSelector, useDispatch } from "react-redux";
+import { getAllBlogs } from "../features/blogs/blogsSlice";
+import Blog from "../components/Blog";
+import Loader from "../components/Loader";
+import WriteBlogButton from "../components/WriteBlogButton";
+import { useEffect } from "react";
 
 const BlogsPage = () => {
-  const { blogs } = useContext(BlogContext);
-  if (blogs.length === 0) {
-    return <Loader />
+  const dispatch = useDispatch();
+  const { blogs, status } = useSelector((state) => state.blogs);
+
+  useEffect(() => {
+    if (status === "idle" || blogs.length === 0) {
+      dispatch(getAllBlogs());
+    }
+  }, [status, blogs.length, dispatch]);
+
+  if (status === "loading" && !blogs) {
+    return <Loader />;
   }
 
-  // Sort the blogs array in ascending order by date (assuming each blog has a "date" field)
-  blogs.sort((a, b) => new Date(b.date) - new Date(a.date));
+  if (status === "failed") {
+    return <div>Error loading blogs. Please try again.</div>;
+  }
 
   return (
-    <div className='min-h-screen'>
-      {/* <SearchBox /> */}
-      <div className='container mx-auto p-6 grid grid-cols-1'>
-        {blogs.length > 0 ? (
-          blogs.map((blog) => (
-            <Blog blog={blog} key={blog._id} />
-          ))
+    <div className="min-h-screen">
+      <div className="container mx-auto p-6 grid grid-cols-1">
+        {blogs && blogs.length > 0 ? (
+          blogs.map((blog) => <Blog blog={blog} key={blog._id} />)
         ) : (
           <div>No blogs found.</div>
         )}
-        <WriteButton/>
+        <WriteBlogButton />
       </div>
     </div>
   );

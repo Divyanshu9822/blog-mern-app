@@ -11,6 +11,6 @@ const {
 
 router.post("/:blogId/comments/", validateToken, addComment);
 router.delete("/:blogId/comments/:commentId", validateToken, deleteComment);
-router.get("/:blogId/comments/", validateToken, getAllCommentsForBlog);
+router.get("/:blogId/comments/", getAllCommentsForBlog);
 
 module.exports = router;
