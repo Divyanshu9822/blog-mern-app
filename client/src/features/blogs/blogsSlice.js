@@ -151,9 +151,27 @@ const blogsSlice = createSlice({
         state.error = action.error.message;
       })
       .addCase(updateBlogPost.fulfilled, (state, action) => {
-        state.blog = action.payload;
+        const updatedBlog = action.payload;
+
+        state.blog = updatedBlog;
+
+        const blogIndex = state.blogs.findIndex(
+          (blog) => blog._id === updatedBlog._id
+        );
+        if (blogIndex !== -1) {
+          state.blogs[blogIndex] = updatedBlog;
+        }
+
+        const myBlogIndex = state.myBlogs.findIndex(
+          (blog) => blog._id === updatedBlog._id
+        );
+        if (myBlogIndex !== -1) {
+          state.myBlogs[myBlogIndex] = updatedBlog;
+        }
+
         state.status = "succeeded";
       })
+
       .addCase(updateBlogPost.pending, (state) => {
         state.status = "loading";
       })
