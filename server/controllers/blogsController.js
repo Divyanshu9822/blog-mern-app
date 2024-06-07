@@ -36,6 +36,10 @@ exports.getBlogs = asyncHandler(async (req, res) => {
 exports.getBlog = asyncHandler(async (req, res) => {
   const blogId = req.params.id;
 
+  if (!mongoose.Types.ObjectId.isValid(blogId)) {
+    return res.status(400).json({ message: "Invalid blog ID" });
+  }
+
   try {
     const blog = await Blog.aggregate([
       { $match: { _id: new mongoose.Types.ObjectId(blogId) } },
@@ -156,74 +160,82 @@ exports.postBlog = asyncHandler(async (req, res) => {
 });
 
 exports.updateBlog = asyncHandler(async (req, res) => {
-  const blogId = req.params.id;
-  const { title, content, summary, imageUrl } = req.body;
+  try {
+    const blogId = req.params.id;
+    const { title, content, summary, imageUrl } = req.body;
 
-  if (!title || !content || !summary || !imageUrl) {
-    res.status(400);
-    throw new Error("Please fill all fields");
-  }
+    if (!title || !content || !summary || !imageUrl) {
+      res.status(400);
+      throw new Error("Please fill all fields");
+    }
 
-  const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId);
 
-  if (!blog) {
-    res.status(404);
-    throw new Error("Blog not found");
-  }
+    if (!blog) {
+      res.status(404);
+      throw new Error("Blog not found");
+    }
 
-  if (blog.author.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to update this blog");
-  }
+    if (blog.author.toString() !== req.user.id) {
+      res.status(401);
+      throw new Error("Not authorized to update this blog");
+    }
 
-  blog.title = title;
-  blog.content = content;
-  blog.summary = summary;
-  blog.imageUrl = imageUrl;
+    blog.title = title;
+    blog.content = content;
+    blog.summary = summary;
+    blog.imageUrl = imageUrl;
 
-  const updatedBlog = await blog.save();
+    const updatedBlog = await blog.save();
 
-  const updatedBlogWithAuthor = await Blog.aggregate([
-    { $match: { _id: updatedBlog._id } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "authorInfo",
+    const updatedBlogWithAuthor = await Blog.aggregate([
+      { $match: { _id: updatedBlog._id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
       },
-    },
-    { $unwind: "$authorInfo" },
-    {
-      $addFields: {
-        authorName: "$authorInfo.fullName",
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
       },
-    },
-    {
-      $project: {
-        authorInfo: 0,
+      {
+        $project: {
+          authorInfo: 0,
+        },
       },
-    },
-  ]);
-  res.status(200).json(updatedBlogWithAuthor[0]);
+    ]);
+    res.status(200).json(updatedBlogWithAuthor[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
 });
 
 exports.deleteBlog = asyncHandler(async (req, res) => {
-  const blogId = req.params.id;
+  try {
+    const blogId = req.params.id;
 
-  const blog = await Blog.findById(blogId);
+    const blog = await Blog.findById(blogId);
 
-  if (!blog) {
-    res.status(404);
-    throw new Error("Blog not found");
+    if (!blog) {
+      res.status(404);
+      throw new Error("Blog not found");
+    }
+
+    if (blog.author.toString() !== req.user.id) {
+      res.status(401);
+      throw new Error("Not authorized to delete this blog");
+    }
+
+    await Blog.findByIdAndDelete(blogId);
+
+    res.status(200).json({ message: "Blog deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  if (blog.author.toString() !== req.user.id) {
-    res.status(401);
-    throw new Error("Not authorized to delete this blog");
-  }
-
-  await Blog.findByIdAndDelete(blogId);
-
-  res.status(200).json({ message: "Blog deleted successfully" });
 });

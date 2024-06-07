@@ -7,6 +7,16 @@ exports.registerUser = asyncHandler(async (req, res) => {
   try {
     const { fullName, email, password } = req.body;
 
+    if (!fullName || !email || !password) {
+      return res.status(400).json({ message: "All fields are required" });
+    }
+
+    if (password.length < 6) {
+      return res
+        .status(400)
+        .json({ message: "Password must be at least 6 characters long" });
+    }
+
     const existingUser = await User.findOne({ email });
     if (existingUser) {
       return res.status(400).json({ message: "Email already exists" });
@@ -22,6 +32,7 @@ exports.registerUser = asyncHandler(async (req, res) => {
     });
 
     await newUser.save();
+
     res.status(201).json({ message: "User registered successfully" });
   } catch (error) {
     res.status(500).json({ message: error.message });
@@ -32,14 +43,20 @@ exports.loginUser = asyncHandler(async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res
+        .status(400)
+        .json({ message: "Email and password are required" });
+    }
+
     const user = await User.findOne({ email });
     if (!user) {
-      return res.status(400).json({ message: "Invalid email" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) {
-      return res.status(400).json({ message: "Invalid password" });
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
     const accessToken = jwt.sign(
@@ -49,9 +66,7 @@ exports.loginUser = asyncHandler(async (req, res) => {
         email: user.email,
       },
       process.env.ACCESS_TOKEN_SECRET_KEY,
-      {
-        expiresIn: "24h",
-      }
+      { expiresIn: "24h" }
     );
 
     res.status(200).json({ accessToken });
@@ -61,5 +76,5 @@ exports.loginUser = asyncHandler(async (req, res) => {
 });
 
 exports.currentUser = asyncHandler(async (req, res) => {
-  res.json(req.user);
+  res.status(200).json(req.user);
 });
