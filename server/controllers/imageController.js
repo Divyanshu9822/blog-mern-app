@@ -1,20 +1,33 @@
-const upload = require('../middleware/imageUpload');
+const upload = require("../middleware/imageUpload");
+const asyncHandler = require("express-async-handler");
 
-const handleImageUpload = (req, res) => {
-  // 'image' is the name of the field in the FormData that contains the image file
-  upload.single('image')(req, res, (err) => {
-    if (err) {
-      return res.status(400).json({ message: 'Image upload failed', error: err.message });
-    }
+const handleImageUpload = asyncHandler(async (req, res) => {
+  try {
+    const uploadPromise = () =>
+      new Promise((resolve, reject) => {
+        upload.single("image")(req, res, (err) => {
+          if (err) {
+            return reject(err);
+          }
+          if (!req.file) {
+            return reject(new Error("Image not provided"));
+          }
+          resolve(req.file);
+        });
+      });
 
-    if (!req.file) {
-      return res.status(400).json({ message: 'Image not provided' });
-    }
+    const file = await uploadPromise();
 
-    const imageUrl = req.file.path; // The Cloudinary URL of the uploaded image
-    res.json({ imageUrl: imageUrl });
-  });
-};
+    const imageUrl = file.path;
+
+    res.status(200).json({
+      message: "Image uploaded successfully",
+      imageUrl: imageUrl,
+    });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+});
 
 module.exports = {
   handleImageUpload,

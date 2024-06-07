@@ -4,9 +4,13 @@ const asyncHandler = require("express-async-handler");
 
 exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
   try {
+    if (!mongoose.Types.ObjectId.isValid(req.params.blogId)) {
+      return res.status(400).json({ message: "Invalid blog ID" });
+    }
+
     const comments = await Comment.aggregate([
-      { $sort: { timestamp: -1 } },
       { $match: { blogId: new mongoose.Types.ObjectId(req.params.blogId) } },
+      { $sort: { timestamp: -1 } },
       {
         $lookup: {
           from: "users",
@@ -30,22 +34,33 @@ exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
 
     res.status(200).json(comments);
   } catch (error) {
-    console.error("Error fetching comments:", error);
-    res.status(500).json({ message: "Failed to fetch comments", error });
+    res
+      .status(500)
+      .json({ message: "Failed to fetch comments", error: error.message });
   }
 });
 
 exports.addComment = asyncHandler(async (req, res) => {
   try {
-    const newComment = new Comment({
-      blogId: req.params.blogId,
-      author: req.user.id,
-      content: req.body.content,
-    });
+    const { content } = req.body;
+    const { blogId } = req.params;
+    const author = req.user.id;
+
+    if (!mongoose.Types.ObjectId.isValid(blogId)) {
+      return res.status(400).json({ message: "Invalid blog ID" });
+    }
+
+    if (!content || typeof content !== "string") {
+      return res
+        .status(400)
+        .json({ message: "Content is required and must be a string" });
+    }
+
+    const newComment = new Comment({ blogId, author, content });
     await newComment.save();
 
     const commentWithAuthorName = await Comment.aggregate([
-      { $match: { _id: newComment._id } },
+      { $match: { _id: new mongoose.Types.ObjectId(newComment._id) } },
       {
         $lookup: {
           from: "users",
@@ -69,22 +84,37 @@ exports.addComment = asyncHandler(async (req, res) => {
 
     res.status(201).json(commentWithAuthorName[0]);
   } catch (error) {
-    console.error("Error adding comment:", error);
-    res.status(500).json({ message: "Failed to add comment", error });
+    res
+      .status(500)
+      .json({ message: "Failed to add comment", error: error.message });
   }
 });
 
 exports.deleteComment = asyncHandler(async (req, res) => {
   try {
-    const deletedComment = await Comment.findByIdAndDelete(
-      req.params.commentId
-    );
-    if (!deletedComment) {
+    const { commentId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(commentId)) {
+      return res.status(400).json({ message: "Invalid comment ID" });
+    }
+
+    const comment = await Comment.findById(commentId);
+    if (!comment) {
       return res.status(404).json({ message: "Comment not found" });
     }
-    res.status(204).send();
+
+    if (comment.author.toString() !== req.user.id) {
+      return res
+        .status(401)
+        .json({ message: "Not authorized to delete this comment" });
+    }
+
+    await Comment.findByIdAndDelete(commentId);
+
+    res.status(204).json({ message: "Comment deleted successfully" });
   } catch (error) {
-    console.error("Error deleting comment:", error);
-    res.status(500).json({ message: "Failed to delete comment", error });
+    res
+      .status(500)
+      .json({ message: "Failed to delete comment", error: error.message });
   }
 });

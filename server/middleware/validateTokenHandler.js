@@ -9,8 +9,7 @@ const validateToken = asyncHandler(async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY); // Replace 'YOUR_SECRET_KEY' with your actual secret key
-    // console.log(decoded)
+    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET_KEY); 
     req.user = decoded;
     next();
   } catch (error) {
