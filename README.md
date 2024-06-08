@@ -7,7 +7,7 @@ Short description of the project.
 ## Table of Contents
 
 - [Description](#description)
-- [API Docs](https://google.com)
+- [API Docs](https://blog-mern-app-c78l.onrender.com/api-docs/)
 - [Features](#features)
 - [Technologies Used](#technologies-used)
 - [Screenshots](#screenshots)
