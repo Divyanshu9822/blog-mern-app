@@ -31,7 +31,7 @@ const {
  *               content:
  *                 type: string
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       201:
  *         description: Comment added successfully
@@ -65,7 +65,7 @@ router.post("/:blogId/comments", validateToken, addComment);
  *         schema:
  *           type: string
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       204:
  *         description: Comment deleted successfully

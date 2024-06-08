@@ -78,7 +78,7 @@ router.post("/login", loginUser);
  *       - Users
  *     summary: Get current user info
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Success

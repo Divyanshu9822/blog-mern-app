@@ -19,7 +19,7 @@ const commentsRouter = require("./commentsRoutes");
  *       - Blogs
  *     summary: Get blogs created by the authenticated user
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     responses:
  *       200:
  *         description: Success
@@ -38,7 +38,7 @@ router.get("/my-blogs", validateToken, getMyBlogs);
  *       - Blogs
  *     summary: Create a new blog
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     requestBody:
  *       required: true
  *       content:
@@ -74,7 +74,7 @@ router.post("/", validateToken, postBlog);
  *       - Blogs
  *     summary: Update an existing blog
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
@@ -119,7 +119,7 @@ router.put("/:id", validateToken, updateBlog);
  *       - Blogs
  *     summary: Delete an existing blog
  *     security:
- *       - bearerAuth: []
+ *       - apiKeyAuth: []
  *     parameters:
  *       - in: path
  *         name: id
