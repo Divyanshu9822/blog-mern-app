@@ -9,7 +9,6 @@ const options = {
         "API endpoints for a bloggify web application documented on swagger",
       contact: {
         name: "Divyanshu Prasad",
-        email: "divyanshu871@gmail.com",
         url: "https://divyanshuprasad.dev/",
       },
       version: "1.0.0",
