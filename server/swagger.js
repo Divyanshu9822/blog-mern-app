@@ -13,16 +13,6 @@ const options = {
       },
       version: "1.0.0",
     },
-    servers: [
-      {
-        url: "http://localhost:8000/",
-        description: "Local server",
-      },
-      {
-        url: "https://blog-mern-app-c78l.onrender.com",
-        description: "Live server",
-      },
-    ],
     tags: [
       {
         name: "Auth",
