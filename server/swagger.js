@@ -23,6 +23,24 @@ const options = {
         description: "Live server",
       },
     ],
+    tags: [
+      {
+        name: "Auth",
+        description: "Operations related to user authentication",
+      },
+      {
+        name: "Upload",
+        description: "Upload blog cover images to cloudinary",
+      },
+      {
+        name: "Blogs",
+        description: "Operations related to blogs",
+      },
+      {
+        name: "Comments",
+        description: "Operations related to comments",
+      },
+    ],
     components: {
       securitySchemes: {
         apiKeyAuth: { 
