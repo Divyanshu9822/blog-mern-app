@@ -5,14 +5,14 @@ const {
   registerUser,
   loginUser,
   currentUser,
-} = require("../controllers/usersController");
+} = require("../controllers/authController");
 
 /**
  * @openapi
- * /api/users/register:
+ * /api/auth/register:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Register a new user
  *     requestBody:
  *       required: true
@@ -42,10 +42,10 @@ router.post("/register", registerUser);
 
 /**
  * @openapi
- * /api/users/login:
+ * /api/auth/login:
  *   post:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Login a user
  *     requestBody:
  *       required: true
@@ -72,10 +72,10 @@ router.post("/login", loginUser);
 
 /**
  * @openapi
- * /api/users/current:
+ * /api/auth/current:
  *   get:
  *     tags:
- *       - Users
+ *       - Auth
  *     summary: Get current user info
  *     security:
  *       - apiKeyAuth: []
