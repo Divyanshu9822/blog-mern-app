@@ -115,48 +115,53 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
 });
 
 exports.postBlog = asyncHandler(async (req, res) => {
-  if (
-    !req.body.title ||
-    !req.body.content ||
-    !req.body.imageUrl ||
-    !req.body.summary
-  ) {
-    res.status(400);
-    throw new Error("please fill all fields");
+  try {
+    if (
+      !req.body.title ||
+      !req.body.content ||
+      !req.body.imageUrl ||
+      !req.body.summary
+    ) {
+      res.status(400);
+      throw new Error("Please fill all fields");
+    }
+
+    const blog = await Blog.create({
+      title: req.body.title,
+      content: req.body.content,
+      summary: req.body.summary,
+      imageUrl: req.body.imageUrl,
+      minsRead: req.body.minsRead,
+      author: req.user.id,
+    });
+
+    const blogWithAuthor = await Blog.aggregate([
+      { $match: { _id: blog._id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
+
+    res.status(200).json(blogWithAuthor[0]);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
-
-  const blog = await Blog.create({
-    title: req.body.title,
-    content: req.body.content,
-    summary: req.body.summary,
-    imageUrl: req.body.imageUrl,
-    minsRead: req.body.minsRead,
-    author: req.user.id,
-  });
-
-  const blogWithAuthor = await Blog.aggregate([
-    { $match: { _id: blog._id } },
-    {
-      $lookup: {
-        from: "users",
-        localField: "author",
-        foreignField: "_id",
-        as: "authorInfo",
-      },
-    },
-    { $unwind: "$authorInfo" },
-    {
-      $addFields: {
-        authorName: "$authorInfo.fullName",
-      },
-    },
-    {
-      $project: {
-        authorInfo: 0,
-      },
-    },
-  ]);
-  res.status(200).json(blogWithAuthor[0]);
 });
 
 exports.updateBlog = asyncHandler(async (req, res) => {
