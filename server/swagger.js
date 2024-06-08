@@ -23,6 +23,15 @@ const options = {
         description: "Live server",
       },
     ],
+    components: {
+      securitySchemes: {
+        apiKeyAuth: { 
+          type: "apiKey",
+          in: "header", 
+          name: "Authorization", 
+        },
+      },
+    },
   },
   apis: ["./routes/*.js"],
 };
