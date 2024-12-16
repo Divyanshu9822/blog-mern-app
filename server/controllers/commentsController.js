@@ -1,9 +1,32 @@
 const Comment = require("../models/commentModel");
+const mongoose = require("mongoose");
 const asyncHandler = require("express-async-handler");
 
 exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
   try {
-    const comments = await Comment.find({ blogId: req.params.blogId });
+    const comments = await Comment.aggregate([
+      { $sort: { timestamp: -1 } },
+      { $match: { blogId: new mongoose.Types.ObjectId(req.params.blogId) } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
 
     res.status(200).json(comments);
   } catch (error) {
@@ -14,15 +37,37 @@ exports.getAllCommentsForBlog = asyncHandler(async (req, res) => {
 
 exports.addComment = asyncHandler(async (req, res) => {
   try {
-    console.log(req.user)
-    console.log(req.params.blogId)
     const newComment = new Comment({
       blogId: req.params.blogId,
       author: req.user.id,
       content: req.body.content,
     });
     await newComment.save();
-    res.status(201).json(newComment);
+
+    const commentWithAuthorName = await Comment.aggregate([
+      { $match: { _id: newComment._id } },
+      {
+        $lookup: {
+          from: "users",
+          localField: "author",
+          foreignField: "_id",
+          as: "authorInfo",
+        },
+      },
+      { $unwind: "$authorInfo" },
+      {
+        $addFields: {
+          authorName: "$authorInfo.fullName",
+        },
+      },
+      {
+        $project: {
+          authorInfo: 0,
+        },
+      },
+    ]);
+
+    res.status(201).json(commentWithAuthorName[0]);
   } catch (error) {
     console.error("Error adding comment:", error);
     res.status(500).json({ message: "Failed to add comment", error });

@@ -82,6 +82,7 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
   try {
     const blogs = await Blog.aggregate([
       { $match: { author: new mongoose.Types.ObjectId(user_id) } },
+      { $sort: { date: -1 } },
       {
         $lookup: {
           from: "users",
@@ -103,7 +104,7 @@ exports.getMyBlogs = asyncHandler(async (req, res) => {
       },
     ]);
 
-    res.status(200).json({ blogs });
+    res.status(200).json(blogs);
   } catch (error) {
     res.status(500).json({ message: error.message });
   }
@@ -129,7 +130,29 @@ exports.postBlog = asyncHandler(async (req, res) => {
     author: req.user.id,
   });
 
-  res.status(200).json(blog);
+  const blogWithAuthor = await Blog.aggregate([
+    { $match: { _id: blog._id } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "authorInfo",
+      },
+    },
+    { $unwind: "$authorInfo" },
+    {
+      $addFields: {
+        authorName: "$authorInfo.fullName",
+      },
+    },
+    {
+      $project: {
+        authorInfo: 0,
+      },
+    },
+  ]);
+  res.status(200).json(blogWithAuthor[0]);
 });
 
 exports.updateBlog = asyncHandler(async (req, res) => {
@@ -160,7 +183,29 @@ exports.updateBlog = asyncHandler(async (req, res) => {
 
   const updatedBlog = await blog.save();
 
-  res.status(200).json(updatedBlog);
+  const updatedBlogWithAuthor = await Blog.aggregate([
+    { $match: { _id: updatedBlog._id } },
+    {
+      $lookup: {
+        from: "users",
+        localField: "author",
+        foreignField: "_id",
+        as: "authorInfo",
+      },
+    },
+    { $unwind: "$authorInfo" },
+    {
+      $addFields: {
+        authorName: "$authorInfo.fullName",
+      },
+    },
+    {
+      $project: {
+        authorInfo: 0,
+      },
+    },
+  ]);
+  res.status(200).json(updatedBlogWithAuthor[0]);
 });
 
 exports.deleteBlog = asyncHandler(async (req, res) => {
@@ -178,7 +223,7 @@ exports.deleteBlog = asyncHandler(async (req, res) => {
     throw new Error("Not authorized to delete this blog");
   }
 
-  await blog.remove();
+  await Blog.findByIdAndDelete(blogId);
 
   res.status(200).json({ message: "Blog deleted successfully" });
 });
